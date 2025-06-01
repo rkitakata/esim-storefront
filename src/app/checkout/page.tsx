@@ -1,20 +1,14 @@
 'use client';
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Text, Button, Card } from '@mantine/core';
+import { useProtectedRoute } from '../hooks/useProtectedRoute';
 
 export default function CheckoutPage() {
-  const { user, loading } = useAuth();
+  useProtectedRoute();
   const router = useRouter();
   const { cart, clearCart } = useCart();
-
-  React.useEffect(() => {
-    if (!loading && !user) {
-      router.push('/');
-    }
-  }, [user, loading, router]);
 
   const total = cart.reduce((acc, item) => acc + item.price, 0);
 
@@ -24,8 +18,8 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div>
-      <Text size="2xl" fw={500} className="mb-4">
+    <>
+      <Text fw={500} className="mb-4">
         Checkout
       </Text>
       {cart.length === 0 ? (
@@ -48,6 +42,6 @@ export default function CheckoutPage() {
           </Button>
         </>
       )}
-    </div>
+    </>
   );
 }

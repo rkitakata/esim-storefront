@@ -5,88 +5,15 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { PlanCard } from '../../components/PlanCard';
-import { Text } from '@mantine/core';
+import { Loader, Text } from '@mantine/core';
 
-//
-// Updated Plan interface to match the JSON structure:
-//
-export interface Plan {
-  id: number;
-  name: string;
-  planId: string;
-  price: number;
-  dataId: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  validityDays: number;
-  dataVolume: string;
-  dataUnit: string;
-  validityDaysCycle: string;
-  metadata: Record<string, unknown>;
-  networkId: number;
-  enabled: boolean;
-  packageType: 'PER_DAY' | 'FIXED_DAY';
-  countryId: number;
-  serviceProviderId: number;
-  prices: Record<string, number>;
-  defaultCurrency: string;
-  topupEnabled: boolean;
-  network: {
-    id: number;
-    name: string;
-    enabled: boolean;
-    code: string;
-    apn: string;
-    qos: string;
-    type: 'LOCAL' | 'ROAMING';
-    networkGeneration: string;
-    countryId: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-  country: {
-    name: string;
-    enabled: boolean;
-    subCountries: null; // or string[]
-    code: string;
-  };
-  serviceProvider: {
-    name: string;
-    enabled: boolean;
-  };
-  plans_prices: Record<string, unknown> | null;
-  provision_price: Record<string, unknown> | null;
-  xe: {
-    [currency: string]: number;
-  };
-}
-
-interface ApiResponse {
-  statusCode: number;
-  data: {
-    network: Array<unknown>;
-    country: {
-      name: string;
-      enabled: boolean;
-      subCountries: null;
-      code: string;
-    };
-    plans: {
-      PER_DAY: Plan[];
-      FIXED_DAY: Plan[];
-    };
-  };
-}
+import { ApiResponse, Plan } from '@/app/types/plan';
 
 export default function CountryPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = React.use(params);
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // Instead of a flat array, the API now returns an object with two arrays:
-  //    plans.PER_DAY   (all per-day plans)
-  //    plans.FIXED_DAY (all fixed-day plans)
   const [perDayPlans, setPerDayPlans] = useState<Plan[]>([]);
   const [fixedDayPlans, setFixedDayPlans] = useState<Plan[]>([]);
   const [error, setError] = useState<string>('');
@@ -120,7 +47,12 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
   }, [resolvedParams.name]);
 
   if (loading || loadingPlans) {
-    return <Text>Loading...</Text>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Loader color="white" size="lg" className="w-10 h-10" />
+        <Text>Loading...</Text>
+      </div>
+    );
   }
 
   if (error) {
@@ -128,12 +60,12 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
   }
 
   return (
-    <div>
-      <Text size="2xl" fw={500} className="mb-4 capitalize">
+    <>
+      <Text fw={700} className="mb-4 text-[50px] capitalize">
         {resolvedParams.name}
       </Text>
 
-      <Text size="xl" fw={500} className="mt-4 mb-2">
+      <Text fw={700} className="mt-4 mb-2">
         Unlimited Per-Day Plans
       </Text>
       {perDayPlans.length === 0 ? (
@@ -146,7 +78,7 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
         </div>
       )}
 
-      <Text size="xl" fw={500} className="mt-6 mb-2">
+      <Text fw={700} className="mt-6 mb-2">
         Fixed Data Plans
       </Text>
       {fixedDayPlans.length === 0 ? (
@@ -158,6 +90,6 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

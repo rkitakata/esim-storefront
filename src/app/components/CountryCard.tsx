@@ -8,11 +8,12 @@ interface CountryCardProps {
 
 export const CountryCard = ({ name }: CountryCardProps) => {
   return (
-    <Card shadow="sm" padding="lg" className="cursor-pointer hover:shadow-lg">
+    <Card
+      shadow="sm"
+      padding="lg"
+      className="cursor-pointer hover:shadow-lg border-1 border-gray-200">
       <Link href={`/country/${name.toLowerCase()}`}>
-        <Text size="xl" className="text-center capitalize">
-          {name}
-        </Text>
+        <Text className="text-center capitalize">{name}</Text>
       </Link>
     </Card>
   );

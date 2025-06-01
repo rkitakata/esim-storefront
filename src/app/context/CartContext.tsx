@@ -1,6 +1,6 @@
 'use client';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Plan } from '../country/[name]/page';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { Plan } from '../types/plan';
 
 interface CartContextType {
   cart: Plan[];
@@ -20,7 +20,19 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<Plan[]>([]);
+  const [cart, setCart] = useState<Plan[]>(() => {
+    // Load cart from localStorage on initial mount
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('cart');
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (item: Plan) => {
     setCart([...cart, item]);
