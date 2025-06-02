@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* @import 'tailwindcss';
+@import 'postcss-preset-mantine'; */
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
