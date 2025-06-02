@@ -20,4 +20,4 @@ this project implements a frontend-only eSIM storefront using Next.js, TypeScrip
 - `firebaseConfig.ts` - Firebase initialization  
 
 ## References  
-Followed the assignment specification to implement functionality and design.
+Followed the assignment specification to implement functionality.
