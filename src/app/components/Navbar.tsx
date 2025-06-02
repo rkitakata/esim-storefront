@@ -40,14 +40,16 @@ export const Navbar = () => {
                 href="/cart">
                 Cart
               </Link>
-              <button
-                type="button"
-                className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs border-2 border-white shadow"
-                aria-label="Cart items"
-                tabIndex={-1}
-                disabled>
-                {cartQuantity}
-              </button>
+              {cartQuantity !== 0 && (
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs border-2 border-white shadow"
+                  aria-label="Cart items"
+                  tabIndex={-1}
+                  disabled>
+                  {cartQuantity}
+                </button>
+              )}
             </div>
           </div>
         ) : (

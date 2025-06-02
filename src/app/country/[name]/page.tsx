@@ -26,7 +26,6 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
           `https://esim.gmobile.biz/api/v1/plans?country=${resolvedParams.name}`
         );
 
-        // Drill into res.data.data.plans
         const allPlans = res.data.data.plans;
         setPerDayPlans(allPlans.PER_DAY);
         setFixedDayPlans(allPlans.FIXED_DAY);
