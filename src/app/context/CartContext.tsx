@@ -1,9 +1,9 @@
 'use client';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Plan } from '../types/plan';
+import { CartItem, Plan } from '../types/plan';
 
 interface CartContextType {
-  cart: Plan[];
+  cart: CartItem[];
   addToCart: (item: Plan) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
@@ -20,7 +20,7 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<Plan[]>(() => {
+  const [cart, setCart] = useState<CartItem[]>(() => {
     // Load cart from localStorage on initial mount
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('cart');
@@ -35,7 +35,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [cart]);
 
   const addToCart = (item: Plan) => {
-    setCart([...cart, item]);
+    setCart((prevCart) => {
+      const existing = prevCart.find((cartItem) => cartItem.id === item.id);
+      if (existing) {
+        // Increase quantity
+        return prevCart.map((cartItem) =>
+          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        );
+      } else {
+        // Add new item with quantity 1
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
   };
 
   const removeFromCart = (id: string) => {

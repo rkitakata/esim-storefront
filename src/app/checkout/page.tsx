@@ -2,44 +2,47 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
-import { Text, Button, Card } from '@mantine/core';
-import { useProtectedRoute } from '../hooks/useProtectedRoute';
+import { Text, Button, Box, Space } from '@mantine/core';
 
 export default function CheckoutPage() {
-  useProtectedRoute();
   const router = useRouter();
   const { cart, clearCart } = useCart();
 
-  const total = cart.reduce((acc, item) => acc + item.price, 0);
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const handlePayment = () => {
-    clearCart();
     router.push('/thank-you');
+    clearCart();
   };
 
   return (
     <>
-      <Text fw={500} className="mb-4">
-        Checkout
-      </Text>
+      <Text fw={700}>Checkout</Text>
+      <Space h="lg" />
       {cart.length === 0 ? (
         <Text>Your cart is empty.</Text>
       ) : (
         <>
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <Card key={item.id} shadow="sm" padding="lg">
-                <Text fw={500}>{item.name}</Text>
-                <Text>Price: ${item.price.toFixed(2)}</Text>
-              </Card>
-            ))}
+          {cart.map((item) => (
+            <Box
+              key={item.id}
+              className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 py-4 space-4">
+              <Text fw={500}>{item.name}</Text>
+              <Text>Price: ${item.price.toFixed(2)}</Text>
+              <Text>Quantity: {item.quantity}</Text>
+              <Text>Subtotal: ${(item.price * item.quantity).toFixed(2)}</Text>
+            </Box>
+          ))}
+
+          <Space h="lg" />
+          <div className="flex flex-col items-end gap-2 mt-auto">
+            <Text fw={700} size="lg">
+              Total: ${total.toFixed(2)}
+            </Text>
+            <Button className="mt-2" onClick={handlePayment}>
+              Simulate Payment
+            </Button>
           </div>
-          <Text fw={500} className="mt-4">
-            Total: ${total.toFixed(2)}
-          </Text>
-          <Button className="mt-2" onClick={handlePayment}>
-            Simulate Payment
-          </Button>
         </>
       )}
     </>

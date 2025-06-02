@@ -6,6 +6,7 @@ import '@mantine/core/styles.css';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { Navbar } from './components/Navbar';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export const metadata = {
   title: 'eSIM Storefront',
@@ -22,8 +23,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MantineProvider theme={theme}>
           <AuthProvider>
             <CartProvider>
-              <Navbar />
-              <main className="container mx-auto p-4">{children}</main>
+              <ProtectedRoute excludePaths={['/', '/login']}>
+                <Navbar />
+                <main className="container mx-auto p-4">{children}</main>
+              </ProtectedRoute>
             </CartProvider>
           </AuthProvider>
         </MantineProvider>

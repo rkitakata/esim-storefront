@@ -1,20 +1,34 @@
 'use client';
-import Link from 'next/link';
-import { Card, Text } from '@mantine/core';
 
+import { useRouter } from 'next/navigation';
+import { Button, Card, Text } from '@mantine/core';
+import { useAuth } from '../context/AuthContext';
 interface CountryCardProps {
   name: string;
 }
 
 export const CountryCard = ({ name }: CountryCardProps) => {
+  const router = useRouter();
+  const { user, login } = useAuth();
+
+  const handleClick = () => {
+    if (user) {
+      router.push(`/country/${name.toLowerCase()}`);
+    } else {
+      router.push('/');
+      localStorage.setItem('country', name);
+      login();
+    }
+  };
+
   return (
     <Card
       shadow="sm"
       padding="lg"
       className="cursor-pointer hover:shadow-lg border-1 border-gray-200">
-      <Link href={`/country/${name.toLowerCase()}`}>
+      <Button variant="white" onClick={() => handleClick()}>
         <Text className="text-center capitalize">{name}</Text>
-      </Link>
+      </Button>
     </Card>
   );
 };

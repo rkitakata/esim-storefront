@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { auth, googleProvider } from '../../../firebaseConfig';
 import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
@@ -23,6 +24,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -34,6 +36,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async () => {
     await signInWithPopup(auth, googleProvider);
+    const country = localStorage.getItem('country');
+    if (country) {
+      router.push(`/country/${country.toLowerCase()}`);
+      localStorage.removeItem('country');
+    }
   };
 
   const logout = async () => {

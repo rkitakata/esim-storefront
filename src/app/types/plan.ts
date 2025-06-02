@@ -65,3 +65,7 @@ export interface ApiResponse {
     };
   };
 }
+
+export interface CartItem extends Plan {
+  quantity: number;
+}

@@ -1,51 +1,48 @@
 'use client';
 import React from 'react';
 import { useCart } from '../context/CartContext';
-// import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Text, Button, Card } from '@mantine/core';
-import { Plan } from '../types/plan';
-import { useProtectedRoute } from '../hooks/useProtectedRoute';
+import { Text, Button, Box, Space } from '@mantine/core';
+import { CartItem } from '../types/plan';
 
 export default function CartPage() {
-  //   const { user, loading } = useAuth();
   const router = useRouter();
   const { cart, removeFromCart } = useCart();
 
-  useProtectedRoute();
-
-  const total = cart.reduce((acc: number, item: Plan) => acc + item.price, 0);
+  const total = cart.reduce((acc: number, item: CartItem) => acc + item.price * item.quantity, 0);
 
   return (
     <>
-      <Text fw={500} className="mb-4">
-        Your Cart
-      </Text>
+      <Text fw={700}>Your Cart</Text>
+      <Space h="lg" />
       {cart.length === 0 ? (
         <Text>Your cart is empty.</Text>
       ) : (
-        <div className="space-y-4">
-          {cart.map((item: Plan) => (
-            <Card
-              key={item.id}
-              shadow="sm"
-              padding="lg"
-              className="flex justify-between items-center">
+        <>
+          {cart.map((item: CartItem, index: number) => (
+            <Box
+              key={`${item.id}-${index}`}
+              className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 py-4">
               <Text fw={500}>{item.name}</Text>
               <Text>Price: ${item.price.toFixed(2)}</Text>
+              <Text>Quantity: {item.quantity}</Text>
+              <Text>Subtotal: ${(item.price * item.quantity).toFixed(2)}</Text>
 
               <Button variant="outline" onClick={() => removeFromCart(item.id.toString())}>
                 Remove
               </Button>
-            </Card>
+            </Box>
           ))}
-          <Text fw={500} className="mt-4">
-            Total: ${total.toFixed(2)}
-          </Text>
-          <Button className="mt-2" onClick={() => router.push('/checkout')}>
-            Proceed to Checkout
-          </Button>
-        </div>
+          <Space h="lg" />
+          <div className="flex flex-col items-end gap-2 mt-auto">
+            <Text fw={500} className="mt-4">
+              Total: ${total.toFixed(2)}
+            </Text>
+            <Button className="mt-2" onClick={() => router.push('/checkout')}>
+              Proceed to Checkout
+            </Button>
+          </div>
+        </>
       )}
     </>
   );

@@ -2,28 +2,22 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+
 import { useAuth } from '../../context/AuthContext';
 import { PlanCard } from '../../components/PlanCard';
-import { Loader, Text } from '@mantine/core';
+import { Box, Loader, Text } from '@mantine/core';
 
 import { ApiResponse, Plan } from '@/app/types/plan';
 
 export default function CountryPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = React.use(params);
-  const { user, loading } = useAuth();
-  const router = useRouter();
+
+  const { loading } = useAuth();
 
   const [perDayPlans, setPerDayPlans] = useState<Plan[]>([]);
   const [fixedDayPlans, setFixedDayPlans] = useState<Plan[]>([]);
   const [error, setError] = useState<string>('');
   const [loadingPlans, setLoadingPlans] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/');
-    }
-  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -49,7 +43,7 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
   if (loading || loadingPlans) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <Loader color="white" size="lg" className="w-10 h-10" />
+        <Loader color="blue" size="lg" />
         <Text>Loading...</Text>
       </div>
     );
@@ -61,26 +55,29 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
 
   return (
     <>
-      <Text fw={700} className="mb-4 text-[50px] capitalize">
+      <Text fw={700} size="xl" className="capitalize">
         {resolvedParams.name}
       </Text>
 
-      <Text fw={700} className="mt-4 mb-2">
-        Unlimited Per-Day Plans
-      </Text>
+      <Box className="my-4">
+        <Text fw={700} size="xl" className="mb-2">
+          Unlimited Per-Day Plans
+        </Text>
+      </Box>
       {perDayPlans.length === 0 ? (
         <Text>No per-day plans available.</Text>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {perDayPlans.map((plan) => (
-            <PlanCard key={plan.id.toString()} plan={plan} />
+          {perDayPlans.map((plan, index) => (
+            <PlanCard key={`${plan.id}-${index}`} plan={plan} />
           ))}
         </div>
       )}
-
-      <Text fw={700} className="mt-6 mb-2">
-        Fixed Data Plans
-      </Text>
+      <Box className="my-6">
+        <Text fw={700} size="xl" className="mb-2">
+          Fixed Data Plans
+        </Text>
+      </Box>
       {fixedDayPlans.length === 0 ? (
         <Text>No fixed-day plans available.</Text>
       ) : (
