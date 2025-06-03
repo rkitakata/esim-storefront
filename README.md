@@ -21,3 +21,7 @@ this project implements a frontend-only eSIM storefront using Next.js, TypeScrip
 
 ## References  
 Followed the assignment specification to implement functionality.
+
+
+https://github.com/user-attachments/assets/f37c192f-09fc-4fb8-b249-2016a2a22a2b
+
