@@ -13,7 +13,6 @@ export const metadata = {
   description: 'Browse and buy eSIM plans',
 };
 
-// Optional: define a basic theme if you want to customize Mantine
 const theme = createTheme({});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -23,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MantineProvider theme={theme}>
           <AuthProvider>
             <CartProvider>
-              <ProtectedRoute excludePaths={['/', '/login']}>
+              <ProtectedRoute excludePaths={['/']}>
                 <Navbar />
                 <main className="container mx-auto p-4">{children}</main>
               </ProtectedRoute>

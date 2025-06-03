@@ -2,6 +2,7 @@
 import { useAuth } from '../context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import Loading from './Loading';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ export function ProtectedRoute({ children, excludePaths = ['/'] }: ProtectedRout
   }, [user, loading, router, isExcluded]);
 
   if (loading && !isExcluded) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!user && !isExcluded) {

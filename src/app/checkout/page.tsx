@@ -6,13 +6,12 @@ import { Text, Button, Box, Space } from '@mantine/core';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const handlePayment = () => {
     router.push('/thank-you');
-    clearCart();
   };
 
   return (
