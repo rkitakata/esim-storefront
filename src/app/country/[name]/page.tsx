@@ -5,9 +5,10 @@ import axios from 'axios';
 
 import { useAuth } from '../../context/AuthContext';
 import { PlanCard } from '../../components/PlanCard';
-import { Box, Loader, Text } from '@mantine/core';
+import { Box, Text } from '@mantine/core';
 
 import { ApiResponse, Plan } from '@/app/types/plan';
+import Loading from '@/app/components/Loading';
 
 export default function CountryPage({ params }: { params: Promise<{ name: string }> }) {
   const resolvedParams = React.use(params);
@@ -40,12 +41,7 @@ export default function CountryPage({ params }: { params: Promise<{ name: string
   }, [resolvedParams.name]);
 
   if (loading || loadingPlans) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Loader color="blue" size="lg" />
-        <Text>Loading...</Text>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
